@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,15 +6,12 @@ using Abp.AspNetCore.Mvc.Antiforgery;
 using Abp.AspNetCore.SignalR.Hubs;
 using Abp.AspNetZeroCore.Web.Authentication.JwtBearer;
 using Abp.Castle.Logging.Log4Net;
-using Abp.Extensions;
 using Abp.Hangfire;
 using Abp.PlugIns;
 using Castle.Facilities.Logging;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using tmss.Authorization;
 using tmss.Configuration;
 using tmss.EntityFrameworkCore;
@@ -25,6 +21,7 @@ using tmss.Web.Common;
 using Swashbuckle.AspNetCore.Swagger;
 using tmss.Web.IdentityServer;
 using tmss.Web.Swagger;
+using Abp.Extensions;
 using Stripe;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 using GraphQL.Server;
@@ -32,7 +29,6 @@ using GraphQL.Server.Ui.Playground;
 using HealthChecks.UI.Client;
 using IdentityServer4.Configuration;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using tmss.Configure;
 using tmss.Schemas;
@@ -40,6 +36,9 @@ using tmss.Web.HealthCheck;
 using Newtonsoft.Json.Serialization;
 using Owl.reCAPTCHA;
 using HealthChecksUISettings = HealthChecks.UI.Configuration.Settings;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace tmss.Web.Startup
 {
@@ -56,7 +55,7 @@ namespace tmss.Web.Startup
             _appConfiguration = env.GetAppConfiguration();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public System.IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //MVC
             services.AddControllersWithViews(options =>
@@ -76,7 +75,7 @@ namespace tmss.Web.Startup
                               .WithOrigins(
                                   // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
                                   _appConfiguration["App:CorsOrigins"]
-                                      .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                      .Split(",", System.StringSplitOptions.RemoveEmptyEntries)
                                       .Select(o => o.RemovePostFix("/"))
                                       .ToArray()
                               )
